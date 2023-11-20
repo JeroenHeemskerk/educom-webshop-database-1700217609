@@ -33,8 +33,8 @@ function processRequest($page)
             require_once ('validation.php');
             $data = validateRegister();
             if ($data['valid']){                                                
-                //require_once ('user_service.php');
-                //storeUser($data['email'], $data['name'], $data['password']);          //Kan niet door permission denied (laten we even zitten)
+                require_once ('file_repository.php');
+                storeUser($data['email'], $data['name'], $data['password']);          
                 $page = 'login';
             }
             break;  
@@ -51,6 +51,7 @@ function processRequest($page)
             $page = 'home';
             break;
         }
+    require_once ('session_manager.php');
     $data['login'] = isUserLoggedIn();                                       
     $data['page']= $page;
     return $data;

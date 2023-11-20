@@ -15,15 +15,12 @@ function checkUserExist($data)                                                  
     return $data;
 }
 
-//function storeUser($data)
-//{
-//    $userfile = fopen("users.txt", "a") or die("Kan niet worden geopend!");
-//    $arr = array($data['email'], $data['name'], $data['password']);
-//    $txt = implode("|", $arr);
-//    fwrite($userfile, $txt)  // Voeg een nieuwe regel toe na elke gebruiker
-//    fclose($userfile);
-//    return $data
-//}
+function storeUser($data)
+{
+    
+    
+    return $data
+}
 
 function checkUserLogin($data)                                                  //Dit werkt niet. In het oefenbestand werkt het wel. 
 {
