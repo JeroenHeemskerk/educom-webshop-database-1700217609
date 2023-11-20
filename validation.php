@@ -9,28 +9,16 @@ function validateContact()
     //varifyRequest
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $data['salut'] = (getPostVar('salut'));            
-        $data['name'] = (getPostVar('name'));
-        if (!preg_match("/^[a-zA-Z-' ]*$/",$data['name'])) {
-            $data['nameErr'] = "U kunt hier alleen letters invullen";}        
-        $data['com'] = (getPostVar('com'));
-        $data['email'] = (getPostVar('email'));
-        $data['phone'] = (getPostVar('phone'));
-        $data['street'] = (getPostVar('street'));
-        $data['strnr'] = (getPostVar('strnr'));
-        $data['zpcd'] = (getPostVar('zpcd'));
-        $data['resid'] = (getPostVar('resid'));
-        $data['message'] = (getPostVar('message'));
-        $data = test_contact_input ($data);
-        $data = validateContactData($data);
-        
+        $data = getAndCleanDataFromPost($data);
+        $data = validateContactData($data); 
     }
     return $data;   
 }
 
-function test_contact_input($data) {
+function getAndCleanDataFromPost($data) {
     $results = array();
-    foreach($data as $key => $value) {
+    foreach(array_keys($data) as $key) {
+        $value = getPostVar($key);
         $value = trim($value);
         $value = stripslashes($value);
         $value = htmlspecialchars($value);
@@ -46,7 +34,11 @@ function validateContactData($data)
     } 
     if (empty($data['name'])) {
         $data['nameErr'] = "Naam is verplicht";
-    } 
+    } else {
+        if (!preg_match("/^[a-zA-Z-' ]*$/",$data['name'])) {
+            $data['nameErr'] = "U kunt hier alleen letters invullen";
+        } 
+    }
     if (empty($data['message'])) {
         $data['messageErr'] = "Vraag is verplicht";
     } 
@@ -106,7 +98,7 @@ function validateContactData($data)
             $data['residErr'] = "Uw adresgegevens zijn onvolledig";
         }
     }
-    if (empty($data['saludErr']) && empty($data['nameErr']) && empty($data['comErr']) && empty($data['emailErr']) && empty($data['phoneErr']) && empty($data['streetErr']) && empty($data['strnrErr']) && empty($data['zpcdErr']) && empty($data['residErr']) && empty($data['messageErr']))
+    if (empty($data['salutErr']) && empty($data['nameErr']) && empty($data['comErr']) && empty($data['emailErr']) && empty($data['phoneErr']) && empty($data['streetErr']) && empty($data['strnrErr']) && empty($data['zpcdErr']) && empty($data['residErr']) && empty($data['messageErr']))
     {
         $data['valid'] = true;
     }
@@ -121,35 +113,22 @@ function validateRegister()
     
     //varifyRequest
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
-    {         
-        $data['name'] = (getPostVar('name'));
-        if (!preg_match("/^[a-zA-Z-' ]*$/",$data['name'])) {
-        $data['nameErr'] = "U kunt hier alleen letters invullen";}        
-        $data['email'] = (getPostVar('email'));
-        $data['password'] = (getPostVar('password'));
-        $data['passwordrep'] = (getPostVar('passwordrep'));
-        $data = test_register_input ($data);
-        $data = validateRegisterData($data);
+    {
+        $data = getAndCleanDataFromPost($data);
+        $data = validateRegisterData($data); 
     }
-    return $data;
-}
-
-function test_register_input($data) {
-    $results = array();
-    foreach($data as $key => $value) {
-        $value = trim($value);
-        $value = stripslashes($value);
-        $value = htmlspecialchars($value);
-        $results[$key] = $value;
-    }
-    return $results;
+    return $data;   
 }
 
 function validateRegisterData($data)
 {
     if (empty($data['name'])) {
         $data['nameErr'] = "Naam is verplicht";
-    } 
+    } else {
+        if (!preg_match("/^[a-zA-Z-' ]*$/",$data['name'])) {
+            $data['nameErr'] = "U kunt hier alleen letters invullen";
+        }
+    }
     if (empty($data['email'])) {
         $data['emailErr'] = "E-mailadres is verplicht";
     } else { 
@@ -193,24 +172,11 @@ function validateLogin()
     
     //varifyRequest
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
-    {           
-        $data['email'] = (getPostVar('email'));
-        $data['password'] = (getPostVar('password'));
-        $data = test_login_input ($data);
-        $data = validateLoginData($data);    
+    {
+        $data = getAndCleanDataFromPost($data);
+        $data = validateLoginData($data); 
     }
-    return $data;
-}
-
-function test_login_input($data) {
-    $results = array();
-    foreach($data as $key => $value) {
-        $value = trim($value);
-        $value = stripslashes($value);
-        $value = htmlspecialchars($value);
-        $results[$key] = $value;
-    }
-    return $results;
+    return $data;   
 }
 
 function validateLoginData($data)
@@ -254,6 +220,5 @@ function validateLoginData($data)
             return $data;
     }
     return $data;
-    }
 }
 ?>

@@ -42,17 +42,16 @@ function processRequest($page)
             require_once ('validation.php');
             $data = validateLogin();
             if ($data['valid']){                                               
-                $_SESSION["login"] = true;
                 $page = 'home';
-                $_SESSION['name'] = $data['name'];
+                doLoginUser($data['name']);
             }
             break;
         case "logout":
-            $_SESSION["login"] = false;
+            doLogoutUser();
             $page = 'home';
             break;
         }
-    $data['login'] = isset($_SESSION["login"]) && $_SESSION['login'];                                        
+    $data['login'] = isUserLoggedIn();                                       
     $data['page']= $page;
     return $data;
     }
@@ -141,7 +140,7 @@ function showMenu($data)
 {  
     $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact');  //nieuwe pagina's kunnen hier toegevoegd worden
     if ($data["login"]) {                                                                          
-        $data['menu']['logout'] = $_SESSION['name'] . ' uitloggen';
+        $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen';
     } else {
         $data['menu']['register'] = 'Aanmelden' ; $data['menu']['login'] = 'Inloggen'; 
     }
