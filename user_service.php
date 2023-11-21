@@ -35,7 +35,7 @@ function checkUserLogin($data)                                                  
                     $found = true;
                     if (trim($password) == $password_input) {
                         $data['valid'] = true;
-                        $data['name'] = $name;
+                        
                     }
                     else {
                         $data['passwordErr'] = 'Uw wachtwoord klopt niet'; 
@@ -46,6 +46,7 @@ function checkUserLogin($data)                                                  
             if (!$found) {
                 $data['emailErr'] = 'Uw e-mailadres wordt niet herkend';
             }
+            $data['name'] = $name;
             return $data;
 }
 ?>

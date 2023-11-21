@@ -33,22 +33,18 @@ function checkUserExist($data) {
     mysqli_close($conn);    
 }
 
-function storeUser($data['email'], $data['name'], $data['password'])
+function storeUser($email, $name, $password)
 {
     $dbInfo = startDatabase();
     $conn = $dbInfo['conn'];
-    $email = $data['email']; 
-    $name = $data['name']; 
-    $password = $data['password'];
     $sql = "INSERT INTO users (name, email, password)
-    VALUES ($name, $email, $password);"
+    VALUES ('$name', '$email', '$password')";
 
     if (mysqli_query($conn, $sql)) {
         echo "Nieuw record succesvol aangemaakt";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
-    return $data;
     mysqli_close($conn);
 }
 
@@ -57,20 +53,50 @@ function checkUserLogin($data) {
     $conn = $dbInfo['conn'];
     $email = $data['email'];
     $password = $data['password'];
-    $sql = "SELECT name FROM users WHERE email = '$email' AND password = '$password'";
+    $sql = "SELECT id, name FROM users WHERE email = '$email' AND password = '$password'";
     $result = mysqli_query($conn, $sql);
     $check = mysqli_fetch_array($result);
     if(isset($check)){
-        echo 'test';
         $data['valid'] = true;
-    }   else {
-            echo 'test deel 2';
-            $data['emailErr'] = $data['passwordErr'] = 'Onjuiste combinatie';
-        }
+        $data['id'] = $check['id'];
+        $data['name'] = $check['name'];
+    } else {
+        $data['emailErr'] = $data['passwordErr'] = 'Onjuiste combinatie';
+    }    
     return $data;
     mysqli_close($conn);    
 }
 
+function checkPassword($data)
+{
+    $dbInfo = startDatabase();
+    $conn = $dbInfo['conn'];
+    $userId = $data['userId'];
+    $password = $data['password'];
+    $sql = "SELECT password FROM users WHERE id = '$userId' AND password = '$password'";
+    $result = mysqli_query($conn, $sql);
+    $check = mysqli_fetch_array($result);
+    if (isset($check)){
+        $data['passwordErr'] ="";
+    } else {
+        $data['passwordErr'] = 'Uw oude wachtwoord is onjuist';
+    }
+}
 
+function updatePassword($data)
+{
+    $dbInfo = startDatabase();
+    $conn = $dbInfo['conn'];
+    $userId = $_SESSION['userId'];
+    $password = $data['newpassword'];
+    $sql = "UPDATE password FROM users WHERE id = '$userId'"; //Dit moet een ander comando met SET worden
+    if (mysqli_query($conn, $sql)) {
+        echo "Wachtwoord succesvol aangepast";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+    return $data;
+    mysqli_close($conn);
+}
 
 ?>

@@ -43,19 +43,28 @@ function processRequest($page)
             $data = validateLogin();
             if ($data['valid']){                                               
                 $page = 'home';
-                doLoginUser($data['name']);
+                require_once('session_manager.php');
+                doLoginUser($data['name'], $data['']);
             }
             break;
         case "logout":
+            require_once('session_manager.php');
             doLogoutUser();
             $page = 'home';
             break;
+        case "password":
+            require_once ('validation.php');
+            $data = validatePassword();
+            if ($data['valid']){
+                updatePassword($data['password']);
+                $page = 'confirmed';               
         }
+    }
     require_once ('session_manager.php');
     $data['login'] = isUserLoggedIn();                                       
     $data['page']= $page;
     return $data;
-    }
+}
 
 function showResponsePage($data)
 {
@@ -132,6 +141,14 @@ function showHeaderContent ($data)
             require_once ('thanks.php');
             showThanksHeader ();
             break;
+        /*case 'password':
+            require_once ('change_password.php')
+            showPasswordHeader();
+            break;*/
+        /*case 'confirmed':
+            require_once ('confirmed.php')    ;
+            showConfirmedHeader ();
+            break;*/
         default:
             echo '<p>Pagina niet gevonden</P>';
     }
@@ -141,7 +158,7 @@ function showMenu($data)
 {  
     $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact');  //nieuwe pagina's kunnen hier toegevoegd worden
     if ($data["login"]) {                                                                          
-        $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen';
+        /*$data['menu']['Password'] = 'Instellingen'; */$data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
     } else {
         $data['menu']['register'] = 'Aanmelden' ; $data['menu']['login'] = 'Inloggen'; 
     }
@@ -193,6 +210,14 @@ function showContent($data)
             require_once ('thanks.php');
             showThanksContent ($data);
             break;
+        /*case 'password':
+            require_once('change_password.php');
+            showPasswordContent ($data);         
+            break;*/
+        /*case 'confirmed':
+            require_once('confirmed.php');
+            showConfirmedContent ();
+            break;*/    
         default:
             echo '<p>Pagina niet gevonden</P>';
     }

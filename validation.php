@@ -133,7 +133,7 @@ function validateRegisterData($data)
         $data['emailErr'] = "E-mailadres is verplicht";
     }   else { 
             require_once ('file_repository.php');                        
-            checkUserExist($data);  
+            $data = checkUserExist($data);  
             if (empty($data['emailErr'])) {
                 if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                     $data['emailErr'] = "Dit e-mailadres lijkt niet te kloppen"; 
@@ -161,7 +161,7 @@ function validateRegisterData($data)
 function validateLogin()
 {
     // declareVariables
-    $data = array("email"=>"", "password"=>"", "nameErr"=>"","emailErr"=>"", "passwordErr"=>"", "valid" => false); 
+    $data = array("email"=>"", "password"=>"", "nameErr"=>"","emailErr"=>"", "passwordErr"=>"", "name" => "", "valid" => false); 
     
     //varifyRequest
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
@@ -187,8 +187,41 @@ function validateLoginData($data)
     }                                                       
     else {
         require_once('file_repository.php');
-        checkUserLogin($data);                                                      
+        $data = checkUserLogin($data);                                                      
     }    
+    return $data;
+}
+
+//Wachtwoord wijzigen
+function validatePassword () 
+{
+    //Declare variables
+    $data = array("password"=>"", "passwordrep"=>"", "newpassword"=>"","newpasswordErr"=>"", "passwordErr"=>"", "passwordrepErr"=>"", "valid" => false, "userId" => getLoggedInUserId());
+    //varifyRequest
+    if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
+        $data = getAndCleanDataFromPost($data);
+        $data = validateRegisterData($data); 
+    }
+    if (empty($data['password'])) {
+        $data['passwordErr'] = "Oude wachtwoord is verplicht";
+    } else {
+            $data = checkPassword($data);
+        }
+    if (empty($data['newpassword'])) {
+        $data['newpasswordErr'] = "Nieuw wachtwoord is verplicht";
+    }
+    if (empty($data['passwordrep'])) {
+        $data['passwordrepErr'] = "Wachtwoord herhalen is verplicht";
+    }
+    if (($data['newpassword']) != ($data['passwordrep'])) {
+        $data['passwordrepErr'] = $data['newpasswordErr']= "Wachtwoorden komen niet overeen";
+    }
+    if (empty($data['passwordErr']) && empty($data['passwordErr']) && empty($data['passwordrepErr']))
+    {
+        $data['valid'] = true;
+        updatePassword ($data['newpassword']);
+    }
     return $data;
 }
 ?>
