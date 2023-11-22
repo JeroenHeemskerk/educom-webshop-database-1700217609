@@ -4,7 +4,7 @@ function startDatabase() {
     $servername = "localhost";
     $username = "nicole_web_shop_user";
     $password = "5-W?QM&mEXws%V>";
-    $dbname = "nicole_web_shop_user";
+    $dbname = "nicole_web_shop_user"; 
 
     // Verbinding maken
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -94,7 +94,7 @@ function updatePassword($data)
     $conn = $dbInfo['conn'];
     $userId = $_SESSION['userId'];
     $password = $data['newpassword'];
-    $sql = "UPDATE password FROM users WHERE id = '$userId'"; //Dit moet een ander comando met SET worden
+    $sql = "UPDATE password FROM users WHERE id = '$userId'";           //Dit moet een ander comando met SET worden
     if (mysqli_query($conn, $sql)) {
         echo "Wachtwoord succesvol aangepast";
     } else {
@@ -118,6 +118,19 @@ function showShopItems ($item)
     }
     mysqli_close($conn);
     return $item;
+}
+
+//Details
+function getItemDetails ($itemId)
+{
+    $dbInfo = startDatabase();
+    //declareVariables
+    $conn = $dbInfo['conn'];
+    $sql = "SELECT * FROM item WHERE id = '$itemId'";
+    $results = mysqli_query($conn, $sql);
+    $itemDetails = mysqli_fetch_array($results);
+    mysqli_close($conn);
+    return $itemDetails;
 }
 
 ?>

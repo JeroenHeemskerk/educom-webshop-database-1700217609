@@ -61,14 +61,14 @@ function processRequest($page)
             }
             break;
         case "details":
-            if ($requested_type == 'POST') {
+            if ($requested_type == 'POST') {          // !!Dit gaat mis
                 require_once ('session_manager.php');           
-                storeItemInSession ();                                                                  // !!Ik moet hier nog iets meegeven
+                storeItemInSession ();                                                                 
                 $page = 'shop';                     
             } 
             if (isset($_GET['itemId'])){
                 require_once('details.php');
-                getItemId ($_GET['itemId']);                                                                           // !!Ik moet hier nog iets meegeven
+                getItemId ($_GET['itemId']);         // !!Ik moet hier nog iets meegeven
             }
             break;
         case "cart":
@@ -260,7 +260,7 @@ function showContent($data)
             break;
         case 'details':
             require_once ('details.php');
-            showItemDetails ();
+            showItemDetails ($itemId);
             break;
         case 'cart':
             require_once ('cart.php');
