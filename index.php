@@ -58,7 +58,29 @@ function processRequest($page)
             if ($data['valid']){
                 updatePassword($data['password']);
                 $page = 'confirmed';               
-        }
+            }
+            break;
+        case "details":
+            if ($requested_type == 'POST') {
+                require_once ('session_manager.php');           
+                storeItemInSession ();                                                                  // !!Ik moet hier nog iets meegeven
+                $page = 'shop';                     
+            } else {
+                getItemId ();                                                                           // !!Ik moet hier nog iets meegeven
+            }
+            break;
+        case "cart":
+            if ($requested_type == 'POST') {
+                require_once ('file_repository.php');
+                storeOrderInDb ();
+                require_once ('session_manager.php');
+                clearSessionFromItems ();
+                $page = 'shop';
+            } else {
+                getItemId ();
+                $page = 'details';
+            }
+            break;
     }
     require_once ('session_manager.php');
     $data['login'] = isUserLoggedIn();                                       
@@ -142,13 +164,25 @@ function showHeaderContent ($data)
             showThanksHeader ();
             break;
         /*case 'password':
-            require_once ('change_password.php')
+            require_once ('change_password.php');
             showPasswordHeader();
             break;*/
         /*case 'confirmed':
-            require_once ('confirmed.php')    ;
+            require_once ('confirmed.php');
             showConfirmedHeader ();
             break;*/
+        case 'shop':
+            require_once ('shop.php');
+            showShopHeader();
+            break;
+        case 'details':
+            require_once ('details.php');
+            showDetailsHeader();
+            break;
+        case 'cart';
+            require_once ('cart.php');
+            showCartHeader();
+            break;
         default:
             echo '<p>Pagina niet gevonden</P>';
     }
@@ -156,9 +190,9 @@ function showHeaderContent ($data)
 
 function showMenu($data)
 {  
-    $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact');  //nieuwe pagina's kunnen hier toegevoegd worden
+    $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact', 'shop' => 'Spellenwinkel');  //nieuwe pagina's kunnen hier toegevoegd worden
     if ($data["login"]) {                                                                          
-        /*$data['menu']['Password'] = 'Instellingen'; */$data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
+        /*$data['menu']['Password'] = 'Instellingen'; */$data['menu']['cart'] = 'Winkelwagen'; $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
     } else {
         $data['menu']['register'] = 'Aanmelden' ; $data['menu']['login'] = 'Inloggen'; 
     }
@@ -217,7 +251,19 @@ function showContent($data)
         /*case 'confirmed':
             require_once('confirmed.php');
             showConfirmedContent ();
-            break;*/    
+            break;*/ 
+        case 'shop':
+            require_once('shop.php');
+            showShopContent ($data);
+            break;
+        case 'details':
+            require_once ('details.php');
+            showItemDetails ();
+            break;
+        case 'cart':
+            require_once ('cart.php');
+            showCartContent ();
+            break;
         default:
             echo '<p>Pagina niet gevonden</P>';
     }

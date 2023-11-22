@@ -19,6 +19,7 @@ function startDatabase() {
 function checkUserExist($data) {
    
     $dbInfo = startDatabase();
+    //declareVariables
     $conn = $dbInfo['conn'];
     $email = $data['email'];
     $sql = "SELECT name FROM users WHERE email = '$email'";
@@ -36,6 +37,7 @@ function checkUserExist($data) {
 function storeUser($email, $name, $password)
 {
     $dbInfo = startDatabase();
+    //declareVariables
     $conn = $dbInfo['conn'];
     $sql = "INSERT INTO users (name, email, password)
     VALUES ('$name', '$email', '$password')";
@@ -51,6 +53,7 @@ function storeUser($email, $name, $password)
 function checkUserLogin($data) {
     $dbInfo = startDatabase();
     $conn = $dbInfo['conn'];
+    //declareVariables
     $email = $data['email'];
     $password = $data['password'];
     $sql = "SELECT id, name FROM users WHERE email = '$email' AND password = '$password'";
@@ -70,6 +73,7 @@ function checkUserLogin($data) {
 function checkPassword($data)
 {
     $dbInfo = startDatabase();
+    //declareVariables
     $conn = $dbInfo['conn'];
     $userId = $data['userId'];
     $password = $data['password'];
@@ -86,6 +90,7 @@ function checkPassword($data)
 function updatePassword($data)
 {
     $dbInfo = startDatabase();
+    //declareVariables
     $conn = $dbInfo['conn'];
     $userId = $_SESSION['userId'];
     $password = $data['newpassword'];
@@ -97,6 +102,22 @@ function updatePassword($data)
     }
     return $data;
     mysqli_close($conn);
+}
+
+//Shop
+function showShopItems ($item)
+{
+    $dbInfo = startDatabase();
+    //declareVariables
+    $conn = $dbInfo['conn'];
+    $sql = "SELECT * FROM item";
+    $results = mysqli_query($conn, $sql);
+    $item = array();
+    while ($row = mysqli_fetch_array($results)) {
+        $item[] = $row;
+    }
+    mysqli_close($conn);
+    return $item;
 }
 
 ?>

@@ -181,8 +181,7 @@ function validateLoginData($data)
             if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                 $data['emailErr'] = "Dit e-mailadres lijkt niet te kloppen";
             }
-            else { 
-        }               
+        }          
     if (empty($data['password'])) {
         $data['passwordErr'] = "Wachtwoord is verplicht";
     }                                                       
