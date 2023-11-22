@@ -65,8 +65,10 @@ function processRequest($page)
                 require_once ('session_manager.php');           
                 storeItemInSession ();                                                                  // !!Ik moet hier nog iets meegeven
                 $page = 'shop';                     
-            } else {
-                getItemId ();                                                                           // !!Ik moet hier nog iets meegeven
+            } 
+            if (isset($_GET['itemId'])){
+                require_once('details.php');
+                getItemId ($_GET['itemId']);                                                                           // !!Ik moet hier nog iets meegeven
             }
             break;
         case "cart":
@@ -213,7 +215,7 @@ function showNavigateList($data)
 
 function showNavigateItem($link, $label) 
 {
-        echo '<li><a href="index.php?page=' . $link . '">' . $label . '</a></li>';
+        echo '<li><a class="navigateMenu" href="index.php?page=' . $link . '">' . $label . '</a></li>';
 }     
    
 function showContent($data)
