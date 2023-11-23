@@ -45,7 +45,7 @@ function processRequest($page)
                 $page = 'home';
                 require_once('session_manager.php');
                 doLoginUser($data['name'], $_SESSION['userId']);
-                createCart();
+                //createCart();
             }
             break;
         case "logout":
@@ -62,14 +62,16 @@ function processRequest($page)
             }
             break;
         case "details":      
-            if (isset($_GET['itemId'])){               
-                require_once('details.php');
-                $data['itemId'] = getItemId ();         
-            } else {
-                require_once ('session_manager.php');                   
-                storeItemInSession ();                                                                 
-                $page = 'shop';                         //Succesvol aan winkelwagen toegevoegd (optioneel)
-            }
+                handleActions();
+                $requested_type = $_SERVER['REQUEST_METHOD'];
+                if ($requested_type == 'POST') {
+                    $id = getPostvar('id');
+                } else {
+                    $id = getUrlvar('id');
+                }
+                require_once('file_repository.php');
+                $data['item'] = getItemDetails ($id);
+                
             break;
         case "cart":
             if ($requested_type == 'POST') {
@@ -79,7 +81,7 @@ function processRequest($page)
                 clearSessionFromItems ();
                 $page = 'shop';
             } else {
-                getItemId ();
+                getItemById ();
                 $page = 'details';
             }
             break;
@@ -88,6 +90,20 @@ function processRequest($page)
     $data['login'] = isUserLoggedIn();                                       
     $data['page']= $page;
     return $data;
+}
+
+function handleActions ()
+{
+    $action = getPostVar("action");
+    switch ($action) {
+        case "storeItemInSession":
+            $id = getPostVar("id");
+            include_once ('session_manager.php');
+            storeItemInSession ($id);
+            break;
+        //hier kan ook een eraf halen
+        //leegmaken enz.
+    }
 }
 
 function showResponsePage($data)
@@ -260,7 +276,7 @@ function showContent($data)
             break;
         case 'details':
             require_once ('details.php');
-            showItemDetails ($data['itemId']);
+            showItemDetails ($data);
             break;
         case 'cart':
             require_once ('cart.php');

@@ -5,16 +5,10 @@ function showDetailsHeader ()
     echo '<h1>Product details</h1>';
 }
 
-function getItemId ()
-{
-    $itemId = $_GET['itemId'];
-    return $itemId;
-}
-
-function showItemDetails ($itemId)
+function showItemDetails ($data)
 {
     require_once('file_repository.php');
-    $itemDetails = getItemDetails($itemId);
+    $itemDetails = $data['item'];
     $commaPrice = number_format($itemDetails['price'], 2, ',', '.');
         echo    '<div class="itemDetails">' . 
                 '<img src="Images/' . $itemDetails['filename'] . '" width="300" height="300" alt="Afbeelding">'  . 
@@ -24,9 +18,15 @@ function showItemDetails ($itemId)
                 '<br><br>';
         require_once('session_manager.php');
         if (!empty(isUserLoggedIn())) {
-            echo '<button onclick="addItemToCart ()" class="cart"><img src="Images/winkelwagen.png" width="25" height="25" alt ="Voeg toe aan winkelwagen"></button><br>';
-        } 
+            echo '  <form action="index.php" method="post">
+                        <input type="hidden" name="page" value="details">
+                        <input type="hidden" name="id" value="' . $itemDetails['id'] . '">
+                        <input type="hidden" name="action" value="storeItemInSession">
+                        <input class="cartButton "type="submit" value="Voeg toe aan winkelwagentje">
+                        <br>
+                    </form>';
+        }
         echo    '</div>';
-    }
+}
 
 ?>

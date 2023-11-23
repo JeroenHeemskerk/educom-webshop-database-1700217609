@@ -29,7 +29,7 @@ li {
     margin-right: 10px;
 }
   
-.navigateMenu {
+.navigateMenu, .cartButton {
     color: white;
     text-decoration: none;
     background-color:cornflowerblue;
@@ -89,7 +89,7 @@ input, select, textarea {
     border-radius: 8px;
 }
 
-.knop:hover {
+.knop:hover, .cartButton:hover {
     color: white;
     background-color: crimson;
 }
@@ -119,6 +119,6 @@ input, select, textarea {
     text-decoration: none;
 }
 
-.cart {
+.cartIMG {
     border-radius: 50%;
 }

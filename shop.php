@@ -14,7 +14,8 @@ function showShopContent()
     foreach ($item as $row) {
         $commaPrice = number_format($row['price'], 2, ',', '.');
         $shopItemClass = ($counter % 2 == 0) ? 'evenItem' : 'oddItem';
-        echo    '<a class="shopItem" href="index.php?page=details&itemId=' . $row['id'] . '"><div class="' .$shopItemClass . '">' . 
+        $cartIMG = '<img src="Images/winkelwagen.png" width="25" height="25" alt ="Voeg toe aan winkelwagen">';
+        echo    '<a class="shopItem" href="index.php?page=details&id=' . $row['id'] . '"><div class="' .$shopItemClass . '">' . 
                 $row['id'] . '<br>' .
                 '<img src="Images/' . $row['filename'] . '" width="100" height="100" alt="Afbeelding"> 
                 <h3>' . $row['name'] . '</h3>
@@ -22,9 +23,12 @@ function showShopContent()
                 '<br><br>'; 
         require_once('session_manager.php'); 
         if (!empty(isUserLoggedIn())) {
-            echo '  <form>
-                        <input type="hidden" name="' . $row['id'] . '" id="itemId"
-                        <button class="cart"><img src="Images/winkelwagen.png" width="25" height="25" alt ="Voeg toe aan winkelwagen"></button><br>';
+            echo '  <form action="index.php" method="post">
+                        <input type="hidden" name="page" value="details">
+                        <input type="hidden" name="action" value="storeItemInSession">
+                        <input type="hidden" name="id" value="' . $row['id'] . '">
+                        <input class="cartButton "type="submit" value="Voeg toe aan winkelwagentje">
+                        <br>';
         }
         echo    '</div></a>';
                 $counter++;

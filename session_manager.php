@@ -25,10 +25,18 @@
     }
 }
 
-//function createCart ()
-//{
-//  $_SESSION['cart']=;
-//}
+function storeItemInSession($itemId)
+{
+  if (!(isset($_SESSION['cart'])))
+  {
+    $_SESSION['cart'] = array();
+  }
+  if (isset($_SESSION['cart']['$itemId'])) {
+      $_SESSION['cart']['$itemId'] += 1;
+  } else {
+    $_SESSION['cart']['$itemId'] = 1;
+  }
+}
 
 function addItemToCart ()
 {
