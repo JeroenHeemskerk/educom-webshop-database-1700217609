@@ -114,3 +114,11 @@ input, select, textarea {
 .oddItem {
     background-color: rgba(100, 148, 237, 0.436);
 }
+
+.shopItem {
+    text-decoration: none;
+}
+
+.cart {
+    border-radius: 50%;
+}

@@ -45,6 +45,7 @@ function processRequest($page)
                 $page = 'home';
                 require_once('session_manager.php');
                 doLoginUser($data['name'], $_SESSION['userId']);
+                createCart();
             }
             break;
         case "logout":

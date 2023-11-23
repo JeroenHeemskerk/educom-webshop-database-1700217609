@@ -17,4 +17,23 @@
   function getLoggedInUserId() {
     return $_SESSION["userId"];
   } 
+
+  function showBIfLoggedIn ()
+{
+    if (isset($_SESSION['name'])) {
+    return true;
+    }
+}
+
+//function createCart ()
+//{
+//  $_SESSION['cart']=;
+//}
+
+function addItemToCart ()
+{
+  $quan = 0;  
+  $_SESSION['cart'][$itemId] += $quan;
+}
+
   ?>
