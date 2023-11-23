@@ -60,15 +60,14 @@ function processRequest($page)
                 $page = 'confirmed';               
             }
             break;
-        case "details":
-            if ($requested_type == 'POST') {          // !!Dit gaat mis
-                require_once ('session_manager.php');           
-                storeItemInSession ();                                                                 
-                $page = 'shop';                     
-            } 
-            if (isset($_GET['itemId'])){
+        case "details":      
+            if (isset($_GET['itemId'])){               // !!Dit gaat mis
                 require_once('details.php');
-                getItemId ($_GET['itemId']);         // !!Ik moet hier nog iets meegeven
+                $data['itemId'] = getItemId ();         
+            } else {
+                require_once ('session_manager.php');                   
+                storeItemInSession ();                                                                 
+                $page = 'shop';                         //Succesvol aan winkelwagen toegevoegd
             }
             break;
         case "cart":
@@ -260,7 +259,7 @@ function showContent($data)
             break;
         case 'details':
             require_once ('details.php');
-            showItemDetails ($itemId);
+            showItemDetails ($data['itemId']);
             break;
         case 'cart':
             require_once ('cart.php');
