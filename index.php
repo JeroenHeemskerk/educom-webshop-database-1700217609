@@ -44,7 +44,7 @@ function processRequest($page)
             if ($data['valid']){                                               
                 $page = 'home';
                 require_once('session_manager.php');
-                doLoginUser($data['name'], $data['']);
+                doLoginUser($data['name'], $_SESSION['userId']);
             }
             break;
         case "logout":
@@ -61,13 +61,13 @@ function processRequest($page)
             }
             break;
         case "details":      
-            if (isset($_GET['itemId'])){               // !!Dit gaat mis
+            if (isset($_GET['itemId'])){               
                 require_once('details.php');
                 $data['itemId'] = getItemId ();         
             } else {
                 require_once ('session_manager.php');                   
                 storeItemInSession ();                                                                 
-                $page = 'shop';                         //Succesvol aan winkelwagen toegevoegd
+                $page = 'shop';                         //Succesvol aan winkelwagen toegevoegd (optioneel)
             }
             break;
         case "cart":
