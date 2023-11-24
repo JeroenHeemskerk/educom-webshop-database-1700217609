@@ -283,7 +283,7 @@ function showContent($data)
             break;
         case 'cart':
             require_once ('cart.php');
-            showCartContent ();
+            showCartContent ($data);
             break;
         default:
             echo '<p>Pagina niet gevonden</P>';

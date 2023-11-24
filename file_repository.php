@@ -105,7 +105,7 @@ function updatePassword($data)
 }
 
 //Shop
-function showShopItems ($item)
+function getShopItems ()
 {
     $dbInfo = startDatabase();
     //declareVariables
@@ -114,7 +114,7 @@ function showShopItems ($item)
     $results = mysqli_query($conn, $sql);
     $item = array();
     while ($row = mysqli_fetch_array($results)) {
-        $item[] = $row;
+        $item[$row['id']] = $row;
     }
     mysqli_close($conn);
     return $item;

@@ -9,7 +9,7 @@ function showShopContent()
 {
     $item = '';
     require_once('file_repository.php');
-    $item = showShopItems($item);
+    $item = getShopItems($item);
     $counter = 0;
     foreach ($item as $row) {
         $commaPrice = number_format($row['price'], 2, ',', '.');
@@ -27,7 +27,7 @@ function showShopContent()
                         <input type="hidden" name="id" value="' . $row['id'] . '">
                         <input type="hidden" name="action" value="storeItemInSession">
                         <input class="cartButton "type="submit" value="Voeg toe aan winkelwagentje">
-                        <br>';
+                    </form>';
         }
         echo    '</div></a>';
                 $counter++;

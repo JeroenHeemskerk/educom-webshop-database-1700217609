@@ -1,4 +1,4 @@
-<?phph
+<?php
 
 function showCartHeader ()
 {
@@ -9,18 +9,23 @@ function showCartContent ()
 {
     if(isset($_SESSION["cart"])) 
     {
-        $item = '$_SESSION["cart"][$row['id']]';
+        $cart = $_SESSION["cart"];
         require_once('file_repository.php');
-        $item = showShopItems($item);
+        $items = getShopItems();
         $counter = 0;
-        foreach ($item as $row) {
+        foreach ($cart as $itemId => $quantity) {
+            $row = $items[$itemId];
             $commaPrice = number_format($row['price'], 2, ',', '.');
+            $subtotal = $row['price'] * $quantity;
+            $commaSubtotal = number_format($subtotal, 2, ',', '.');
             $shopItemClass = ($counter % 2 == 0) ? 'evenItem' : 'oddItem';
             echo    '<a class="shopItemCart" href="index.php?page=details&id=' . $row['id'] . '">
                     <div class="' .$shopItemClass . '">
                     <div><h3>' . $row['name'] . '</h3></div>
                     <div><img src="Images/' . $row['filename'] . '" width="100" height="100" alt="Afbeelding"></div> 
+                    <div>Aantal: ' . $quantity . '</div>
                     <div>€ ' . $commaPrice . '</div>
+                    <div>€ ' . $commaSubtotal . '</div>
                     <br><br>
                     </div></a>';
                 $counter++;
