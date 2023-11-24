@@ -115,7 +115,7 @@ input, select, textarea {
     background-color: rgba(100, 148, 237, 0.436);
 }
 
-.shopItem {
+.shopItem, a {
     text-decoration: none;
 }
 

@@ -6,6 +6,7 @@
   }
   function doLogoutUser() {
     unset($_SESSION["name"]);
+    unset($_SESSION["cart"]);
   }
   function isUserLoggedIn() {
     return isset($_SESSION["name"]); 
@@ -25,23 +26,17 @@
     }
 }
 
-function storeItemInSession($itemId)
+function storeItemInSession($id)
 {
   if (!(isset($_SESSION['cart'])))
   {
     $_SESSION['cart'] = array();
   }
-  if (isset($_SESSION['cart']['$itemId'])) {
-      $_SESSION['cart']['$itemId'] += 1;
+  if (isset($_SESSION['cart'][$id])) {
+      $_SESSION['cart'][$id] += 1;
   } else {
-    $_SESSION['cart']['$itemId'] = 1;
+    $_SESSION['cart'][$id] = 1;
   }
-}
-
-function addItemToCart ()
-{
-  $quan = 0;  
-  $_SESSION['cart'][$itemId] += $quan;
 }
 
   ?>

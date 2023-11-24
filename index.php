@@ -44,7 +44,7 @@ function processRequest($page)
             if ($data['valid']){                                               
                 $page = 'home';
                 require_once('session_manager.php');
-                doLoginUser($data['name'], $_SESSION['userId']);
+                doLoginUser($data['name'], $data['id']);
                 //createCart();
             }
             break;
@@ -74,16 +74,19 @@ function processRequest($page)
                 
             break;
         case "cart":
-            if ($requested_type == 'POST') {
+            $requested_type = $_SERVER['REQUEST_METHOD'];
+            if ($requested_type =='POST') {
                 require_once ('file_repository.php');
                 storeOrderInDb ();
                 require_once ('session_manager.php');
                 clearSessionFromItems ();
                 $page = 'shop';
-            } else {
-                getItemById ();
+            } /*if  (get verzoek op de cart pagina){
+                $id = getUrlvar('id');
+                require_once('file_repository.php');
+                $data['item'] = getItemDetails ($id);
                 $page = 'details';
-            }
+            }*/
             break;
     }
     require_once ('session_manager.php');
@@ -102,7 +105,6 @@ function handleActions ()
             storeItemInSession ($id);
             break;
         //hier kan ook een eraf halen
-        //leegmaken enz.
     }
 }
 
@@ -134,6 +136,7 @@ function showHeadSection ()
     echo '<head>' . PHP_EOL;             
     echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
     echo '</head>' . PHP_EOL;   
+    var_dump($_SESSION);
 }
 
 function showBodySection($data)
