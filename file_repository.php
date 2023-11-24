@@ -22,6 +22,7 @@ function checkUserExist($data) {
     //declareVariables
     $conn = $dbInfo['conn'];
     $email = $data['email'];
+    $email = mysqli_real_escape_string($conn, $email);
     $sql = "SELECT name FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -55,6 +56,7 @@ function checkUserLogin($data) {
     $conn = $dbInfo['conn'];
     //declareVariables
     $email = $data['email'];
+    $email = mysqli_real_escape_string($conn, $email);
     $password = $data['password'];
     $sql = "SELECT id, name FROM users WHERE email = '$email' AND password = '$password'";
     $result = mysqli_query($conn, $sql);
