@@ -61,6 +61,17 @@ function processRequest($page)
                 $page = 'confirmed';               
             }
             break;
+        case "shop":
+                handleActions();
+                $requested_type = $_SERVER['REQUEST_METHOD'];
+                if ($requested_type == 'POST') {
+                    $id = getPostvar('id');
+                } else {
+                    $id = getUrlvar('id');
+                }
+                require_once('file_repository.php');
+                $data['item'] = getItemDetails ($id);
+                break;
         case "details":      
                 handleActions();
                 $requested_type = $_SERVER['REQUEST_METHOD'];
@@ -71,7 +82,6 @@ function processRequest($page)
                 }
                 require_once('file_repository.php');
                 $data['item'] = getItemDetails ($id);
-                
             break;
         case "cart":
             $requested_type = $_SERVER['REQUEST_METHOD'];
@@ -136,7 +146,6 @@ function showHeadSection ()
     echo '<head>' . PHP_EOL;             
     echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
     echo '</head>' . PHP_EOL;   
-    var_dump($_SESSION);
 }
 
 function showBodySection($data)

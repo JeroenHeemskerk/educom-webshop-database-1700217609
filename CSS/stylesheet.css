@@ -100,7 +100,7 @@ input, select, textarea {
 
 .evenItem, .oddItem {
     color: rgb(46, 72, 119);
-    padding: 30px;
+    padding: 10px;
     border: 2px dotted rgb(46,72,199);
     margin-top: 4px;
     margin-bottom: 4px;
@@ -121,4 +121,23 @@ input, select, textarea {
 
 .cartIMG {
     border-radius: 50%;
+}
+
+td {
+    padding: 0 10px 0 10px;
+    height: 50px;
+}
+
+#itemName {
+    width: 120px;
+}
+
+.total {
+    color: crimson;
+    padding: 10px;
+    border: 2px dotted crimson;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    background-color: rgba(255, 127, 80, 0.234);
+    text-align: right;
 }

@@ -13,6 +13,7 @@ function showCartContent ()
         require_once('file_repository.php');
         $items = getShopItems();
         $counter = 0;
+        $total = 0;
         foreach ($cart as $itemId => $quantity) {
             $row = $items[$itemId];
             $commaPrice = number_format($row['price'], 2, ',', '.');
@@ -20,21 +21,30 @@ function showCartContent ()
             $commaSubtotal = number_format($subtotal, 2, ',', '.');
             $shopItemClass = ($counter % 2 == 0) ? 'evenItem' : 'oddItem';
             echo    '<a class="shopItemCart" href="index.php?page=details&id=' . $row['id'] . '">
-                    <div class="' .$shopItemClass . '">
-                    <div><h3>' . $row['name'] . '</h3></div>
-                    <div><img src="Images/' . $row['filename'] . '" width="100" height="100" alt="Afbeelding"></div> 
-                    <div>Aantal: ' . $quantity . '</div>
-                    <div>€ ' . $commaPrice . '</div>
-                    <div>€ ' . $commaSubtotal . '</div>
+                    <div id="cartItems" class="' .$shopItemClass . '">
+                    <table>
+                    <td id="itemImg"><img src="Images/' . $row['filename'] . '" width="50" height="50" alt="Afbeelding"></td> 
+                    <td id="itemName"><h3>' . $row['name'] . '</h3></td>
+                    <td id="itemQuan">' . $quantity . ' stuk(s)</td>
+                    <td id="price">€ ' . $commaPrice . ' per stuk</td>
+                    <td id="subtotal"><em>subtotaal € ' . $commaSubtotal . '</em></td>
                     <br><br>
+                    </table>
                     </div></a>';
+                $total += $subtotal;
                 $counter++;
         }
+        $commaTotal = number_format($total, 2, ',', '.');
+        echo    '<div class="total">
+                    <p>
+                        <h3>Totaal: € ' . $commaTotal . '</h3>
+                    </p>                
+                </div>';
     }
     else {
         echo    '<div>
                     <p>
-                        Uw winkelwagen is leeg
+                        <h3>Uw winkelwagen is leeg. Kijk snel in de spellenwinkel!</h3>
                     </p>
                 </div>';
     }

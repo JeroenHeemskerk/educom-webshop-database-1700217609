@@ -23,7 +23,7 @@ function showShopContent()
         require_once('session_manager.php'); 
         if (!empty(isUserLoggedIn())) {
             echo '  <form action="index.php" method="post">
-                        <input type="hidden" name="page" value="details">
+                        <input type="hidden" name="page" value="shop">
                         <input type="hidden" name="id" value="' . $row['id'] . '">
                         <input type="hidden" name="action" value="storeItemInSession">
                         <input class="cartButton "type="submit" value="Voeg toe aan winkelwagentje">
