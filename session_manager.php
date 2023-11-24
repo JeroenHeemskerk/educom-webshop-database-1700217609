@@ -39,4 +39,9 @@ function storeItemInSession($id)
   }
 }
 
+function unsetCart ()
+{
+  unset($_SESSION['cart']);
+}
+
   ?>

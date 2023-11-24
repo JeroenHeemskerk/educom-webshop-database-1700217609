@@ -84,20 +84,11 @@ function processRequest($page)
                 $data['item'] = getItemDetails ($id);
             break;
         case "cart":
-            $requested_type = $_SERVER['REQUEST_METHOD'];
-            if ($requested_type =='POST') {
-                require_once ('file_repository.php');
-                storeOrderInDb ();
-                require_once ('session_manager.php');
-                clearSessionFromItems ();
-                $page = 'shop';
-            } /*if  (get verzoek op de cart pagina){
-                $id = getUrlvar('id');
-                require_once('file_repository.php');
-                $data['item'] = getItemDetails ($id);
-                $page = 'details';
-            }*/
+            handleActions();
             break;
+        case "succeed":
+            handleActions($_SESSION['cart']);   
+            break; 
     }
     require_once ('session_manager.php');
     $data['login'] = isUserLoggedIn();                                       
@@ -113,6 +104,13 @@ function handleActions ()
             $id = getPostVar("id");
             include_once ('session_manager.php');
             storeItemInSession ($id);
+            break;
+        case "insertOrderInDb":
+            $cart = [$_SESSION['cart']];
+            include_once('file_repository.php');
+            insertOrderInDb($cart);
+            include_once('session_manager.php');
+            unsetCart();
             break;
         //hier kan ook een eraf halen
     }
@@ -145,7 +143,8 @@ function showHeadSection ()
 {
     echo '<head>' . PHP_EOL;             
     echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
-    echo '</head>' . PHP_EOL;   
+    echo '</head>' . PHP_EOL;  
+    //var_dump($_SESSION['cart']);
 }
 
 function showBodySection($data)
@@ -212,6 +211,10 @@ function showHeaderContent ($data)
         case 'cart';
             require_once ('cart.php');
             showCartHeader();
+            break;
+        case 'succeed':
+            require_once('succeed.php');
+            showSucceedHeader();
             break;
         default:
             echo '<p>Pagina niet gevonden</P>';
@@ -293,6 +296,10 @@ function showContent($data)
         case 'cart':
             require_once ('cart.php');
             showCartContent ($data);
+            break;
+        case 'succeed':
+            require_once('succeed.php');
+            showSucceedContent();
             break;
         default:
             echo '<p>Pagina niet gevonden</P>';

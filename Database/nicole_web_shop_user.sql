@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Gegenereerd op: 23 nov 2023 om 09:38
+-- Gegenereerd op: 24 nov 2023 om 17:04
 -- Serverversie: 10.4.28-MariaDB
 -- PHP-versie: 8.2.4
 
@@ -79,10 +79,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
 -- Indexen voor tabel `item`
 --
 ALTER TABLE `item`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD UNIQUE KEY `description` (`description`) USING HASH,
-  ADD UNIQUE KEY `filename` (`filename`) USING HASH;
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexen voor tabel `users`

@@ -38,6 +38,11 @@ function showCartContent ()
         echo    '<div class="total">
                     <p>
                         <h3>Totaal: € ' . $commaTotal . '</h3>
+                        <form action="index.php" method="post">
+                        <input type="hidden" name="page" value="succeed">
+                        <input type="hidden" name="action" value="insertOrderInDb">
+                        <input class="cartButton "type="submit" value="Afrekenen">
+                        </form>
                     </p>                
                 </div>';
     }
@@ -49,5 +54,4 @@ function showCartContent ()
                 </div>';
     }
 }
-
 ?>

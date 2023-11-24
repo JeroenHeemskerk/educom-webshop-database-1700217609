@@ -119,10 +119,6 @@ input, select, textarea {
     text-decoration: none;
 }
 
-.cartIMG {
-    border-radius: 50%;
-}
-
 td {
     padding: 0 10px 0 10px;
     height: 50px;

@@ -133,4 +133,26 @@ function getItemDetails ($itemId)
     return $itemDetails;
 }
 
+//Order plaatsen
+function insertOrderInDb($cart)
+{
+    $userId = $_SESSION['userId']; 
+    $dbInfo = startDatabase();
+    //declareVariables
+    $conn = $dbInfo['conn'];
+    $cart = $_SESSION['cart'];
+    $orderDate = date("ymdHis"); 
+    $orderNumber = $orderDate . $userId;
+    //in tabel orders plaatsen
+    $sqlInsertOrder = "INSERT INTO orders (user_id, order_nr) VALUES ('$userId', '$orderNumber')";
+    mysqli_query($conn, $sqlInsertOrder);
+    $orderId = mysqli_insert_id($conn); //laatste orderId ophalen
+    //in tabel order_line
+    foreach ($cart as $itemId => $quantity) {
+        $sqlInsertOrderLine = "INSERT INTO order_line (order_id, item_id, quantity) VALUES ('$orderId', '$itemId', '$quantity')";
+        mysqli_query($conn, $sqlInsertOrderLine);
+    }
+    mysqli_close($conn);
+}
+
 ?>
