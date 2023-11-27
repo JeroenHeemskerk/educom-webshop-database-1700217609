@@ -141,9 +141,25 @@ function getUrlVar($key, $default=' ')
 function showHeadSection ()
 {
     echo '<head>' . PHP_EOL;             
-    echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
+    //echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
+    showBootstrap();
     echo '</head>' . PHP_EOL;  
     //var_dump($_SESSION['cart']);
+}
+
+function showBootstrap ()
+{
+    echo '<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>';
 }
 
 function showBodySection($data)
