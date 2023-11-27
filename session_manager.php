@@ -44,4 +44,4 @@ function unsetCart ()
   unset($_SESSION['cart']);
 }
 
-  ?>
+?>

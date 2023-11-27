@@ -11,7 +11,7 @@ function startDatabase() {
     
     // Verbinding checken
     if (!$conn) {
-        die("Verbinding mislukt: " . mysqli_connect_error());
+        throw new Exception("Verbinding mislukt met database mislukt: " . mysqli_connect_error());
     }
     return array('conn' => $conn, 'servername' => $servername, 'username' => $username, 'password' => $password, 'dbname' => $dbname);
 }
@@ -21,6 +21,7 @@ function checkUserExist($data) {
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try {
     $email = $data['email'];
     $email = mysqli_real_escape_string($conn, $email);
     $sql = "SELECT name FROM users WHERE email = '$email'";
@@ -32,7 +33,10 @@ function checkUserExist($data) {
         }
     }
     return $data;
+ }
+ finally {
     mysqli_close($conn);    
+ }
 }
 
 function storeUser($email, $name, $password)
@@ -40,6 +44,7 @@ function storeUser($email, $name, $password)
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try {
     $sql = "INSERT INTO users (name, email, password)
     VALUES ('$name', '$email', '$password')";
 
@@ -48,12 +53,15 @@ function storeUser($email, $name, $password)
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
+ } finally {
     mysqli_close($conn);
+ }
 }
 
 function checkUserLogin($data) {
     $dbInfo = startDatabase();
     $conn = $dbInfo['conn'];
+ try {
     //declareVariables
     $email = $data['email'];
     $email = mysqli_real_escape_string($conn, $email);
@@ -69,7 +77,9 @@ function checkUserLogin($data) {
         $data['emailErr'] = $data['passwordErr'] = 'Onjuiste combinatie';
     }    
     return $data;
+ } finally {
     mysqli_close($conn);    
+ } 
 }
 
 function checkPassword($data)
@@ -77,6 +87,7 @@ function checkPassword($data)
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try {
     $userId = $data['userId'];
     $password = $data['password'];
     $sql = "SELECT password FROM users WHERE id = '$userId' AND password = '$password'";
@@ -88,6 +99,9 @@ function checkPassword($data)
         $data['passwordErr'] = 'Uw oude wachtwoord is onjuist';
     }
     return $data;
+ } finally {
+    cysqli_close($conn);
+ }
 }
 
 function updatePassword($data)
@@ -95,6 +109,7 @@ function updatePassword($data)
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try{
     $userId = $_SESSION['userId'];
     $oldPassword = $data['password'];
     $newPassword = $data['newpassword'];
@@ -112,9 +127,10 @@ function updatePassword($data)
     } else {
         $data['valid'] = false;
     }
-
-    mysqli_close($conn);
     return $data;
+ } finally {
+     mysqli_close($conn);
+ }
 }
 
 //Shop
@@ -123,14 +139,17 @@ function getShopItems ()
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try {
     $sql = "SELECT * FROM item";
     $results = mysqli_query($conn, $sql);
     $item = array();
     while ($row = mysqli_fetch_array($results)) {
         $item[$row['id']] = $row;
     }
-    mysqli_close($conn);
     return $item;
+ } finally {
+     mysqli_close($conn);
+ }
 }
 
 //Details
@@ -139,11 +158,14 @@ function getItemDetails ($itemId)
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
+ try {
     $sql = "SELECT * FROM item WHERE id = '$itemId'";
     $results = mysqli_query($conn, $sql);
     $itemDetails = mysqli_fetch_array($results);
-    mysqli_close($conn);
     return $itemDetails;
+ } finally {
+    mysqli_close($conn);
+ }
 }
 
 //Order plaatsen
@@ -153,6 +175,7 @@ function insertOrderInDb($cart)
     //declareVariables
     $userId = $_SESSION['userId']; 
     $conn = $dbInfo['conn'];
+ try{
     $cart = $_SESSION['cart'];
     $orderDate = date("ymdHis"); 
     $orderNumber = $orderDate . $userId;
@@ -165,7 +188,9 @@ function insertOrderInDb($cart)
         $sqlInsertOrderLine = "INSERT INTO order_line (order_id, item_id, quantity) VALUES ('$orderId', '$itemId', '$quantity')";
         mysqli_query($conn, $sqlInsertOrderLine);
     }
+ } finally {
     mysqli_close($conn);
+ }
 }
 
 //Top 5
@@ -174,10 +199,11 @@ function getTop5()
     $dbInfo = startDatabase();
     //declareVariables
     $conn = $dbInfo['conn'];
-    $sql =  "SELECT item_id, SUM(quantity) AS total_quantity
+ try{
+    $sql =  "SELECT item_id, SUM(quantity) 
             FROM order_line
             GROUP BY item_id
-            ORDER BY total_quantity DESC
+            ORDER BY SUM(quantity) DESC
             LIMIT 5";
     $result = mysqli_query($conn, $sql);
     $top5 = array();
@@ -186,8 +212,10 @@ function getTop5()
         $itemInfo = getItemDetails($itemId);
         $top5[] = $itemInfo;
     }
-    mysqli_close($conn);
     return $top5;
+ } finally {
+    mysqli_close($conn);
+ }
 }
 
 ?>
