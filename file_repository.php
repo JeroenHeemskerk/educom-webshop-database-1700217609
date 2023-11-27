@@ -92,7 +92,7 @@ function checkPassword($data)
 function updatePassword($data)
 {
     $dbInfo = startDatabase();
-    //Declare variables
+    //declareVariables
     $conn = $dbInfo['conn'];
     $userId = $_SESSION['userId'];
     $oldPassword = $data['password'];
@@ -115,8 +115,6 @@ function updatePassword($data)
 
     return $data;
 }
-
-
 
 //Shop
 function getShopItems ()
@@ -150,9 +148,9 @@ function getItemDetails ($itemId)
 //Order plaatsen
 function insertOrderInDb($cart)
 {
-    $userId = $_SESSION['userId']; 
     $dbInfo = startDatabase();
     //declareVariables
+    $userId = $_SESSION['userId']; 
     $conn = $dbInfo['conn'];
     $cart = $_SESSION['cart'];
     $orderDate = date("ymdHis"); 
@@ -167,6 +165,28 @@ function insertOrderInDb($cart)
         mysqli_query($conn, $sqlInsertOrderLine);
     }
     mysqli_close($conn);
+}
+
+//Top 5
+function getTop5()
+{
+    $dbInfo = startDatabase();
+    //declareVariables
+    $conn = $dbInfo['conn'];
+    $sql =  "SELECT item_id, SUM(quantity) AS total_quantity
+            FROM order_line
+            GROUP BY item_id
+            ORDER BY total_quantity DESC
+            LIMIT 5";
+    $result = mysqli_query($conn, $sql);
+    $top5 = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $itemId = $row['item_id']; 
+        $itemInfo = getItemDetails($itemId);
+        $top5[] = $itemInfo;
+    }
+    mysqli_close($conn);
+    return $top5;
 }
 
 ?>

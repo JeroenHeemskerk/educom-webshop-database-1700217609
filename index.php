@@ -148,7 +148,7 @@ function showHeadSection ()
 
 function showBodySection($data)
 {
-    var_dump($data);
+    //var_dump($data);
     echo '  <body>' . PHP_EOL;         //openBody    
     showHeader($data);           
     showMenu($data);             
@@ -204,6 +204,10 @@ function showHeaderContent ($data)
             require_once ('shop.php');
             showShopHeader();
             break;
+        case 'top5':
+            require_once('top5.php');
+            showTop5Header();
+            break;
         case 'details':
             require_once ('details.php');
             showDetailsHeader();
@@ -223,7 +227,7 @@ function showHeaderContent ($data)
 
 function showMenu($data)
 {  
-    $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact', 'shop' => 'Spellenwinkel');  //nieuwe pagina's kunnen hier toegevoegd worden
+    $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact', 'shop' => 'Spellenwinkel', 'top5' => 'Top 5 spellen');  //nieuwe pagina's kunnen hier toegevoegd worden
     if ($data["login"]) {                                                                          
         $data['menu']['password'] = 'Instellingen'; $data['menu']['cart'] = 'Winkelwagen'; $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
     } else {
@@ -288,6 +292,10 @@ function showContent($data)
         case 'shop':
             require_once('shop.php');
             showShopContent ($data);
+            break;
+        case 'top5':
+            require_once('top5.php');
+            showTop5List ($data);
             break;
         case 'details':
             require_once ('details.php');
