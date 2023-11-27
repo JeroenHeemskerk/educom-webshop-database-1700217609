@@ -56,9 +56,9 @@ function processRequest($page)
             require_once ('validation.php');
             $data = validatePassword();
             if ($data['valid']){
-                require_once("file_repository.php");
-                updatePassword($data['password']);
                 $page = 'confirmed';               
+                require_once("file_repository.php");
+                $data = updatePassword($data['password']);
             }    
             break;
         case "shop":
@@ -102,7 +102,7 @@ function handleActions ()
     switch ($action) {
         case "storeItemInSession":
             $id = getPostVar("id");
-            include_once ('session_manager.php');
+            require_once ('session_manager.php');
             storeItemInSession ($id);
             break;
         case "insertOrderInDb":

@@ -44,7 +44,7 @@ function storeUser($email, $name, $password)
     VALUES ('$name', '$email', '$password')";
 
     if (mysqli_query($conn, $sql)) {
-        echo "Nieuw record succesvol aangemaakt";
+        echo "U bent succesvol aangemeld, u kunt nu inloggen.";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
@@ -87,6 +87,7 @@ function checkPassword($data)
     } else {
         $data['passwordErr'] = 'Uw oude wachtwoord is onjuist';
     }
+    return $data;
 }
 
 function updatePassword($data)
@@ -101,18 +102,20 @@ function updatePassword($data)
     $checkOldPasswordQuery = "SELECT id FROM users WHERE id = '$userId' AND password = '$oldPassword'";
     $result = mysqli_query($conn, $checkOldPasswordQuery);
     if (mysqli_num_rows($result) == 1) {
-        $updatePasswordQuery = "UPDATE users SET password = '$escapedNewPassword' WHERE id = '$userId'";
+        $updatePasswordQuery = "UPDATE users SET password = '$escapedPassword' WHERE id = '$userId'";
         if (mysqli_query($conn, $updatePasswordQuery)) {
             echo "Wachtwoord succesvol aangepast";
+            $data['valid'] = true;
         } else {
             echo "Error: " . $updatePasswordQuery . "<br>" . mysqli_error($conn);
+            $data['valid'] = false;
         }
     } else {
         echo "Uw oude wachtwoord komt niet overeen. Aanpassen mislukt. Probeer opnieuw.";
+        $data['valid'] = false;
     }
 
     mysqli_close($conn);
-
     return $data;
 }
 
