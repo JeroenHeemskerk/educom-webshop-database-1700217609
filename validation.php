@@ -195,18 +195,25 @@ function validateLoginData($data)
 //Wachtwoord wijzigen
 function validatePassword () 
 {
-    //Declare variables
-    $data = array("password"=>"", "passwordrep"=>"", "newpassword"=>"","newpasswordErr"=>"", "passwordErr"=>"", "passwordrepErr"=>"", "valid" => false, "userId" => getLoggedInUserId());
+    // declareVariables
+    $data = array("password"=>"", "passwordrep"=>"", "newpassword"=>"","newpasswordErr"=>"", "passwordErr"=>"", "passwordrepErr"=>"", "valid" => false, "userId" => $_SESSION["userId"]);
     //varifyRequest
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
         $data = getAndCleanDataFromPost($data);
-        $data = validateRegisterData($data); 
+        $data = validatePasswordData($data); 
     }
+    return $data;   
+}
+
+function validatePasswordData($data)
+{
     if (empty($data['password'])) {
         $data['passwordErr'] = "Oude wachtwoord is verplicht";
     } else {
+            require_once('file_repository.php');
             $data = checkPassword($data);
+            return $data;
         }
     if (empty($data['newpassword'])) {
         $data['newpasswordErr'] = "Nieuw wachtwoord is verplicht";
@@ -220,7 +227,7 @@ function validatePassword ()
     if (empty($data['passwordErr']) && empty($data['passwordErr']) && empty($data['passwordrepErr']))
     {
         $data['valid'] = true;
-        updatePassword ($data['newpassword']);
+        updatePassword ($data);
     }
     return $data;
 }

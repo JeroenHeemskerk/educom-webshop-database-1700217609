@@ -45,7 +45,6 @@ function processRequest($page)
                 $page = 'home';
                 require_once('session_manager.php');
                 doLoginUser($data['name'], $data['id']);
-                //createCart();
             }
             break;
         case "logout":
@@ -57,9 +56,10 @@ function processRequest($page)
             require_once ('validation.php');
             $data = validatePassword();
             if ($data['valid']){
+                require_once("file_repository.php");
                 updatePassword($data['password']);
                 $page = 'confirmed';               
-            }
+            }    
             break;
         case "shop":
                 handleActions();
@@ -112,7 +112,6 @@ function handleActions ()
             include_once('session_manager.php');
             unsetCart();
             break;
-        //hier kan ook een eraf halen
     }
 }
 
@@ -149,6 +148,7 @@ function showHeadSection ()
 
 function showBodySection($data)
 {
+    var_dump($data);
     echo '  <body>' . PHP_EOL;         //openBody    
     showHeader($data);           
     showMenu($data);             
@@ -192,14 +192,14 @@ function showHeaderContent ($data)
             require_once ('thanks.php');
             showThanksHeader ();
             break;
-        /*case 'password':
+        case 'password':
             require_once ('change_password.php');
             showPasswordHeader();
-            break;*/
-        /*case 'confirmed':
+            break;
+        case 'confirmed':
             require_once ('confirmed.php');
             showConfirmedHeader ();
-            break;*/
+            break;
         case 'shop':
             require_once ('shop.php');
             showShopHeader();
@@ -225,7 +225,7 @@ function showMenu($data)
 {  
     $data['menu']= array('home' => 'Startpagina', 'about' => 'Over mij', 'contact' => 'Contact', 'shop' => 'Spellenwinkel');  //nieuwe pagina's kunnen hier toegevoegd worden
     if ($data["login"]) {                                                                          
-        /*$data['menu']['Password'] = 'Instellingen'; */$data['menu']['cart'] = 'Winkelwagen'; $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
+        $data['menu']['password'] = 'Instellingen'; $data['menu']['cart'] = 'Winkelwagen'; $data['menu']['logout'] = getLoggedInUserName() . ' uitloggen'; 
     } else {
         $data['menu']['register'] = 'Aanmelden' ; $data['menu']['login'] = 'Inloggen'; 
     }
@@ -277,14 +277,14 @@ function showContent($data)
             require_once ('thanks.php');
             showThanksContent ($data);
             break;
-        /*case 'password':
+        case 'password':
             require_once('change_password.php');
             showPasswordContent ($data);         
-            break;*/
-        /*case 'confirmed':
+            break;
+        case 'confirmed':
             require_once('confirmed.php');
             showConfirmedContent ();
-            break;*/ 
+            break;
         case 'shop':
             require_once('shop.php');
             showShopContent ($data);

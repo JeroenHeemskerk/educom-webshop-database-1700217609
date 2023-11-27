@@ -92,19 +92,31 @@ function checkPassword($data)
 function updatePassword($data)
 {
     $dbInfo = startDatabase();
-    //declareVariables
+    //Declare variables
     $conn = $dbInfo['conn'];
     $userId = $_SESSION['userId'];
-    $password = $data['newpassword'];
-    $sql = "UPDATE password FROM users WHERE id = '$userId'";           //Dit moet een ander comando met SET worden
-    if (mysqli_query($conn, $sql)) {
-        echo "Wachtwoord succesvol aangepast";
+    $oldPassword = $data['password'];
+    $newPassword = $data['newpassword'];
+    $escapedPassword = mysqli_real_escape_string($conn, $newPassword);
+    $checkOldPasswordQuery = "SELECT id FROM users WHERE id = '$userId' AND password = '$oldPassword'";
+    $result = mysqli_query($conn, $checkOldPasswordQuery);
+    if (mysqli_num_rows($result) == 1) {
+        $updatePasswordQuery = "UPDATE users SET password = '$escapedNewPassword' WHERE id = '$userId'";
+        if (mysqli_query($conn, $updatePasswordQuery)) {
+            echo "Wachtwoord succesvol aangepast";
+        } else {
+            echo "Error: " . $updatePasswordQuery . "<br>" . mysqli_error($conn);
+        }
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Uw oude wachtwoord komt niet overeen. Aanpassen mislukt. Probeer opnieuw.";
     }
-    return $data;
+
     mysqli_close($conn);
+
+    return $data;
 }
+
+
 
 //Shop
 function getShopItems ()
