@@ -141,8 +141,8 @@ function getUrlVar($key, $default=' ')
 function showHeadSection ()
 {
     echo '<head>' . PHP_EOL;             
-    //echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
-    showBootstrap();
+    echo '<link rel="stylesheet" href="CSS/stylesheet.css">' . PHP_EOL; //showCssFile          
+    //showBootstrap();
     echo '</head>' . PHP_EOL;  
     //var_dump($_SESSION['cart']);
 }

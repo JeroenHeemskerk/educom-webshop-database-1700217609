@@ -45,8 +45,10 @@ function storeUser($email, $name, $password)
     //declareVariables
     $conn = $dbInfo['conn'];
  try {
+    $raw_password = $password;
+    $hashed_password = password_hash($raw_password, PASSWORD_BCRYPT, ['cost' =>14]);
     $sql = "INSERT INTO users (name, email, password)
-    VALUES ('$name', '$email', '$password')";
+    VALUES ('$name', '$email', '$hashed_password')";
 
     if (mysqli_query($conn, $sql)) {
         echo "U bent succesvol aangemeld, u kunt nu inloggen.";
@@ -65,17 +67,18 @@ function checkUserLogin($data) {
     //declareVariables
     $email = $data['email'];
     $email = mysqli_real_escape_string($conn, $email);
-    $password = $data['password'];
-    $sql = "SELECT id, name FROM users WHERE email = '$email' AND password = '$password'";
+    $entered_password = $data['password'];
+    $sql = "SELECT id, name, password FROM users WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
-    $check = mysqli_fetch_array($result);
-    if(isset($check)){
-        $data['valid'] = true;
-        $data['id'] = $check['id'];
-        $data['name'] = $check['name'];
-    } else {
-        $data['emailErr'] = $data['passwordErr'] = 'Onjuiste combinatie';
-    }    
+    if ($result && $row = mysqli_fetch_assoc($result)) {
+        if(password_verify($entered_password, $row['password'])) {
+            $data['valid'] = true;
+            $data['id'] = $row['id'];
+            $data['name'] = $row['name'];
+        } else {
+            $data['emailErr'] = $data['passwordErr'] = 'Onjuiste combinatie';
+        }    
+    } 
     return $data;
  } finally {
     mysqli_close($conn);    
@@ -89,18 +92,19 @@ function checkPassword($data)
     $conn = $dbInfo['conn'];
  try {
     $userId = $data['userId'];
-    $password = $data['password'];
-    $sql = "SELECT password FROM users WHERE id = '$userId' AND password = '$password'";
+    $entered_password = $data['password'];
+    $sql = "SELECT password FROM users WHERE id = '$userId'";
     $result = mysqli_query($conn, $sql);
-    $check = mysqli_fetch_array($result);
-    if (isset($check)){
-        $data['passwordErr'] ="";
-    } else {
-        $data['passwordErr'] = 'Uw oude wachtwoord is onjuist';
+    if ($result && $row = mysqli_fetch_array($result)) {
+        if (password_verify($entered_password, $row['password'])) {
+            $data['passwordErr'] ="";
+        } else {
+            $data['passwordErr'] = 'Uw oude wachtwoord is onjuist';
+        }
+        return $data;
     }
-    return $data;
- } finally {
-    cysqli_close($conn);
+ }finally {
+    mysqli_close($conn);
  }
 }
 
@@ -114,22 +118,23 @@ function updatePassword($data)
     $oldPassword = $data['password'];
     $newPassword = $data['newpassword'];
     $escapedPassword = mysqli_real_escape_string($conn, $newPassword);
-    $checkOldPasswordQuery = "SELECT id FROM users WHERE id = '$userId' AND password = '$oldPassword'";
+    $checkOldPasswordQuery = "SELECT id, password FROM users WHERE id = '$userId'";
     $result = mysqli_query($conn, $checkOldPasswordQuery);
-    if (mysqli_num_rows($result) == 1) {
-        $updatePasswordQuery = "UPDATE users SET password = '$escapedPassword' WHERE id = '$userId'";
-        if (mysqli_query($conn, $updatePasswordQuery)) {
-            $data['valid'] = true;
-        } else {
-            echo "Error: " . $updatePasswordQuery . "<br>" . mysqli_error($conn);
-            $data['valid'] = false;
+    if ($result && $row = mysqli_fetch_assoc($result)) {
+        if (password_verify($oldPassword, $row['password'])) {
+            $newHashedPassword = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 14]);
+            $updatePasswordQuery = "UPDATE users SET password = '$newHashedPassword' WHERE id= '$userId'";
+            if(mysqli_query($conn, $updatePasswordQuery)) {
+                $data['valid'] = true;
+            } else {
+                echo "Error: " . $updatePasswordQuery . "<br>" . mysqli_error($conn);
+                $data['valid'] = false;
+            }
         }
-    } else {
-        $data['valid'] = false;
     }
     return $data;
  } finally {
-     mysqli_close($conn);
+    mysqli_close($conn);
  }
 }
 
