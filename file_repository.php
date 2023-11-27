@@ -104,14 +104,12 @@ function updatePassword($data)
     if (mysqli_num_rows($result) == 1) {
         $updatePasswordQuery = "UPDATE users SET password = '$escapedPassword' WHERE id = '$userId'";
         if (mysqli_query($conn, $updatePasswordQuery)) {
-            echo "Wachtwoord succesvol aangepast";
             $data['valid'] = true;
         } else {
             echo "Error: " . $updatePasswordQuery . "<br>" . mysqli_error($conn);
             $data['valid'] = false;
         }
     } else {
-        echo "Uw oude wachtwoord komt niet overeen. Aanpassen mislukt. Probeer opnieuw.";
         $data['valid'] = false;
     }
 

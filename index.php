@@ -58,7 +58,7 @@ function processRequest($page)
             if ($data['valid']){
                 $page = 'confirmed';               
                 require_once("file_repository.php");
-                $data = updatePassword($data['password']);
+                $data = updatePassword($data);
             }    
             break;
         case "shop":
