@@ -107,7 +107,7 @@ function checkPassword($data)
     mysqli_close($conn);
  }
 }
-
+//Wachtwoord wijzigen
 function updatePassword($data)
 {
     $dbInfo = startDatabase();
@@ -206,9 +206,11 @@ function getTop5()
     $conn = $dbInfo['conn'];
  try{
     $sql =  "SELECT item_id, SUM(quantity) 
-            FROM order_line
-            GROUP BY item_id
-            ORDER BY SUM(quantity) DESC
+            FROM order_line 
+            LEFT JOIN orders ON orders.id = order_line.order_id 
+            WHERE order_date > ADDDATE(CURDATE(), -5)
+            GROUP BY item_id 
+            ORDER BY SUM(quantity) DESC 
             LIMIT 5";
     $result = mysqli_query($conn, $sql);
     $top5 = array();
